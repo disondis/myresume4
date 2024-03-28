@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+</head>
+<body>
+    <h1>register</h1>
+    <label>Name</label><input type="text" placeholder="register your name" id="register_name"><br>
+    <label>email</label><input type="text" placeholder="register your email" id="register_email"><br>
+    <label>password</label><input type="text" placeholder="register your password" id="register_password"><br>
+
+    <button type="button" id="register">register</button>
+ 
+</body>
+</html>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getFirestore,addDoc,collection} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+  
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8-c8YNkLE-ucj-ZTPr6mBgJV9PdL_Fgo",
+      authDomain: "myresume-4f213.firebaseapp.com",
+      projectId: "myresume-4f213",
+      storageBucket: "myresume-4f213.appspot.com",
+      messagingSenderId: "560849180039",
+      appId: "1:560849180039:web:72e9b327a4659922c86f22"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    
+  // Initialize Cloud Firestore and get a reference to the service
+  const db = getFirestore(app);
+  
+      
+  register.addEventListener('click', async (e) => {
+        var registername=document.getElementById('register_name').value;
+        var registeremail=document.getElementById('register_email').value;
+        var registerpassword=document.getElementById('register_password').value;
+
+
+
+  const firebase=await addDoc(collection(db, "register"), {
+     name: registername,
+    email:registeremail,
+    password:registerpassword
+    });
+    alert("user added")
+    const eachid=firebase.id
+    location=`login.html?id=${eachid}`
+    });
+  
+  </script>

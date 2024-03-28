@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit</title>
+    <script type="text/javascript" src="resume.js"></script>
+
+</head>
+<body>
+    <label>name</label><input type="text" id="inputtexts"><br><br>
+    <label>email</label><input type="text" id="emails"><br><br>
+    <label>project_tittle</label><input type="text" id="project_tittles"><br><br>
+    <label>age</label><input type="text" id="ages"><br><br>
+    <label>contact</label><input type="text" id="contacts"><br><br>
+    <label>declaration</label><input type="text" id="declarations"><br><br>
+    <label>address</label><input type="text" id="addresses"><br><br>
+
+
+    <label>fathername</label><input type="text" id="fathername_"><br><br>
+    <label>mothername</label><input type="text" id="mothername_"><br><br>
+
+    <div id="skills1">
+        <h2>skills</h2>
+
+    </div>
+    <button type="button" onclick="addskillsbtn('skills1')">addskills</button>
+
+    <div id="hobbies1">
+        <h2>hobbies</h2>
+    </div> 
+    <button type="button" onclick="addskillsbtn('hobbies1')">add hobbies</button> 
+
+    <div id="languages1">
+        <h2>languages</h2>
+    </div>    
+    <button type="button" onclick="addskillsbtn('languages1')">add languages</button> 
+
+    <!-- edit page education -->
+
+    <h2>education</h2>
+    <table border="1">
+          <thead>
+            <th>institute_name</th>
+            <th>percentage</th>
+            <th>year</th>
+          </thead>
+          <tbody id="educationvalue">
+
+          </tbody>
+    </table>
+    <button type="button" onclick="addskillsbtn('educationvalue')">add education</button> 
+
+
+    <!-- edit page project -->
+    <h2>project</h2>
+    <table border="1">
+          <thead>
+            <th>tittle</th>
+            <th>role</th>
+            <th>year</th>
+          </thead>
+          <tbody id="projectvalue">
+
+          </tbody>
+    </table>
+    <button type="button" onclick="addskillsbtn('projectvalue')">add project</button> 
+
+
+    <!-- edit page experiance -->
+    <h2>experiance</h2>
+    <table border="1">
+          <thead>
+            <th>company_name</th>
+            <th>jobrole</th>
+            <th>year</th>
+          </thead>
+          <tbody id="experiancevalue">
+
+          </tbody>
+    </table>
+    <button type="button" onclick="addskillsbtn('experiancevalue')">add experiance</button> 
+
+
+
+
+
+
+
+
+    <button type="button" id="updatefunction">update</button>
+    <button id="logout">logout</button>
+
+
+
+</body>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+  import { getFirestore,addDoc,getDocs,updateDoc,doc,collection} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyC8-c8YNkLE-ucj-ZTPr6mBgJV9PdL_Fgo",
+    authDomain: "myresume-4f213.firebaseapp.com",
+    projectId: "myresume-4f213",
+    storageBucket: "myresume-4f213.appspot.com",
+    messagingSenderId: "560849180039",
+    appId: "1:560849180039:web:72e9b327a4659922c86f22"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+
+    let parms=new URLSearchParams(document.location.search)
+    let index=parms.get("id")
+
+    getDocs(collection(db,"myresume")).then(edit1 => {
+      edit1.forEach((each)=>{
+        if(index==each.id){
+          let datas=each.data()
+          console.log(datas)
+          document.getElementById("inputtexts").value=datas.name
+          document.getElementById("emails").value=datas.email
+    document.getElementById("project_tittles").value=datas.project_tittle
+    document.getElementById("ages").value=datas.age
+    document.getElementById("contacts").value=datas.contact
+    document.getElementById("declarations").value=datas.declaration
+    document.getElementById("addresses").value=datas.address
+
+
+    document.getElementById("fathername_").value=datas.personel_details.fathername
+    document.getElementById("mothername_").value=datas.personel_details.mother_name
+
+                            //  to get skills
+     let empty_skills=""
+    for(let each_skills of datas.skills){
+     empty_skills=empty_skills+`skills:<input type="text" value="${each_skills}" class='skills2' />`
+    }
+    document.getElementById("skills1").innerHTML=empty_skills
+    
+                            // to get hobbies
+    let empty_hobbies=""
+    for(let each_hobbies of datas.hobbies){
+    empty_hobbies=empty_hobbies+`hobbies:<input type="text" value="${each_hobbies}" class="hobbies2"/>`
+    }
+    document.getElementById("hobbies1").innerHTML=empty_hobbies
+    
+                     // to get languages
+  let empty_languages=""
+ for(let each_languages of datas.languages){
+  empty_languages=empty_languages+`languages:<input type="text" value="${each_languages}" class="languages2" />`
+   }
+    document.getElementById("languages1").innerHTML=empty_languages 
+                //   to get education operation 
+
+   let editoperation= datas.education 
+   let  updateeditdata =""   
+   for(let eachdata in editoperation){
+    updateeditdata=updateeditdata+`<tr>
+    <td><input value="${editoperation[eachdata].institute_name}" onkeyup="editz(this,'${eachdata}','institute_name','education')"></td>
+    <td><input value="${editoperation[eachdata].percentage}" onkeyup="editz(this,'${eachdata}','percentage','education')"></td>
+    <td><input value="${editoperation[eachdata].year}" onkeyup="editz(this,'${eachdata}','year','education')"></td>
+   
+    </tr>`
+   }  
+   document.getElementById("educationvalue").innerHTML=updateeditdata  
+
+      //    to get project operation
+
+     let projectoperation= datas.project 
+     let  updateprojectdata =""   
+     for(let each_projectdata in projectoperation){
+    updateprojectdata=updateprojectdata+`<tr>
+     <td><input value="${projectoperation[each_projectdata].tittle}" onkeyup="editz(this,'${each_projectdata}','tittle','project')"></td>
+     <td><input value="${projectoperation[each_projectdata].role}" onkeyup="editz(this,'${each_projectdata}','role','project')"></td>
+    <td><input value="${projectoperation[each_projectdata].year}" onkeyup="editz(this,'${each_projectdata}','year','project')"></td>
+             
+    </tr>`
+    }  
+    document.getElementById("projectvalue").innerHTML=updateprojectdata 
+
+            // to get experiance operation
+     let experianceoperation=datas.experiance    
+     let updateexpdata="" 
+     for(let each_exp in experianceoperation){
+        updateexpdata=updateexpdata+`<tr>
+        <td><input value="${experianceoperation[each_exp].company_name}" onkeyup="editz(this,'${each_exp}','company_name','experiance')"></td>
+        <td><input value="${experianceoperation[each_exp].jobrole}" onkeyup="editz(this,'${each_exp}','jobrole','experiance')"></td>
+       <td><input value="${experianceoperation[each_exp].year}" onkeyup="editz(this,'${each_exp}','year','experiance')"></td>
+               
+       </tr>`
+     }
+     document.getElementById("experiancevalue").innerHTML=updateexpdata  
+        }
+      })
+    })
+
+    
+    updatefunction.addEventListener('click', async (e) => {
+
+      let tittle1=document.getElementById("project_tittles").value
+    let name1=document.getElementById("inputtexts").value
+   let email1=document.getElementById("emails").value
+   let age1=document.getElementById("ages").value
+    let contact1=document.getElementById("contacts").value
+    let declaration1=document.getElementById("declarations").value
+    let address1=document.getElementById("addresses").value
+
+
+   let fathername1=document.getElementById("fathername_").value
+    let mothername1=document.getElementById("mothername_").value
+
+    let skillsvalue=document.getElementsByClassName("skills2")  
+    let hobbiesvalue=document.getElementsByClassName("hobbies2") 
+    let lanvalue=document.getElementsByClassName("languages2")  
+ 
+
+      let fianlskill=[]
+      let fianlhobbies=[]
+      let fianllan=[]
+
+
+      for(let eachskills of skillsvalue){
+        fianlskill.push(eachskills.value)
+      } 
+
+               //    update hobbies
+
+       for(let eachhobbies of hobbiesvalue){
+        fianlhobbies.push(eachhobbies.value)
+       } 
+
+        // update languages
+        for(let eachlan of lanvalue){
+         fianllan.push(eachlan.value)
+        } 
+
+        
+
+    await updateDoc(doc(db, "myresume",index),{
+      name:name1, 
+      project_tittle:tittle1,
+      email:email1,
+      age:age1,
+      contact:contact1,
+      declaration:declaration1,
+      address:address1,
+
+      personel_details:{
+      fathername:fathername1,
+      mother_name:mothername1
+      },
+      skills:fianlskill,
+      hobbies:fianlhobbies,
+      languages:fianllan
+     
+
+    })
+    location="list.html"
+  })
+
+
+  document.getElementById('logout').addEventListener('click', (e) => {
+    localStorage.removeItem("userdata")
+    location="../login.html"
+  })
+
+</script>
+
+</html>

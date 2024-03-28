@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>template</title>
+    <script src="template.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="templatepage">
+        <li><a href="#" onclick="template(1)">template1</a></li>
+        <li><a href="#" onclick="template(2)">template2</a></li>
+        <li><a href="#" onclick="template(3)">template3</a></li>
+        <li><a href="#" onclick="template(4)">template4</a></li>
+        <li><a href="#" onclick="template(5)">template5</a></li>
+
+    </div>    
+    <button id="logout">logout</button>
+
+</body>
+<script>
+    let parms=new URLSearchParams(document.location.search)
+    let id=parms.get("id")
+    function template(num){
+        if(num==1){
+            location=`template_1/index.html?id=${id}`
+        }
+    }  
+    document.getElementById('logout').addEventListener('click', (e) => {
+    localStorage.removeItem("userdata")
+    location="login.html"
+  })
+</script>
+
+</html>

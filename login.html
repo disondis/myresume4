@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login page</title>
+</head>
+<body>
+    <h1>welcome to login page</h1>
+    <h1>login</h1>
+   <label>Email</label> <input type="text" placeholder="type your eamil" id="loginemail"><br>
+    <label>Password</label><input type="text" placeholder="type your password" id="loginpassword"><br>
+    <button style="background-color: blue;" type="button" id="login">login</button>
+    <hr>
+    <p>do u haven't account?<a href="register.html"><b style="color: red;">please register</b></a></p>
+    
+</body>
+
+</html>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getFirestore,getDocs,collection} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+  
+ 
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC8-c8YNkLE-ucj-ZTPr6mBgJV9PdL_Fgo",
+      authDomain: "myresume-4f213.firebaseapp.com",
+      projectId: "myresume-4f213",
+      storageBucket: "myresume-4f213.appspot.com",
+      messagingSenderId: "560849180039",
+      appId: "1:560849180039:web:72e9b327a4659922c86f22"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    
+  // Initialize Cloud Firestore and get a reference to the service
+  const db = getFirestore(app);
+  let parms=new URLSearchParams(document.location.search)
+    let index=parms.get("id")
+  
+      login.addEventListener('click',async (e)=>{
+        getDocs(collection(db,"register")).then(logpage=>{
+        let emails=document.getElementById("loginemail").value
+        let passwords=document.getElementById("loginpassword").value
+        if(emails ==""  && passwords==""){
+            alert("pls fill the dettails")
+            return
+        }
+        let userdata=false
+        logpage.forEach((each)=>{
+            let datas=each.data();
+            if(emails==datas.email && passwords==datas.password){
+                userdata={
+                email:datas.email,
+                id:each.id,
+                name:datas.name
+                }
+                localStorage.setItem("userdata",JSON.stringify(userdata))
+                location=`resume.html?id=${each.id}`
+                userdata=true
+            }
+
+        })
+           if(!userdata){
+            alert("your password or email is incorrect")
+           }
+
+        })
+        
+        
+      })
+
+     
+
+      
+  </script>
